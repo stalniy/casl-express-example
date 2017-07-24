@@ -4,6 +4,7 @@ function defineAbilitiesFor(user) {
   const { rules, can } = AbilityBuilder.extract()
 
   can('read', ['Post', 'Comment'])
+  can('create', 'User')
 
   if (user) {
     can('manage', ['Post', 'Comment'], { author: user._id })
