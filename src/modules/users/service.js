@@ -30,11 +30,11 @@ function update(req, res, next) {
     .catch(next)
 }
 
-function create(req, res) {
+function create(req, res, next) {
   const user = new User(req.body.user)
 
   req.ability.throwUnlessCan('create', user)
-  res.send({ user })
+  user.save().catch(next).then(() => res.send({ user }))
 }
 
 module.exports = { create, find, update }
