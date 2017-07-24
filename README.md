@@ -12,3 +12,12 @@ Permission logic (i.e., abilities) are define in `src/auth/abilities.js`. Rules 
 The main logic is built on top of modules (`src/modules`)
 
 **Warning**: this code is not production ready and may have some bugs or use bad practises (e.g. it stores passwords with hashing)
+
+## Installation
+
+```sh
+git clone https://github.com/stalniy/casl-express-example.git
+cd casl-express-example
+npm install
+npm start # `npm run dev` to run in dev mode
+```
