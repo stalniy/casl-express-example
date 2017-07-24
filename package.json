@@ -1,0 +1,25 @@
+{
+  "name": "blog-express",
+  "version": "1.0.0",
+  "description": "Example of CASL and express integration",
+  "main": "src/index.js",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "casl": "^0.3.4",
+    "express": "^4.15.3",
+    "http-errors": "^1.6.1",
+    "jsonwebtoken": "^7.4.1",
+    "mongoose": "^4.11.4",
+    "passport": "^0.3.2",
+    "passport-jwt": "^2.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "scripts": {
+    "start": "node src",
+    "dev": "nodemon src"
+  },
+  "author": "Sergii Stotskyi <sergiy.stotskiy@freaksidea.com>",
+  "license": "MIT"
+}
