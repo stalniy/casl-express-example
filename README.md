@@ -11,7 +11,7 @@ Application uses `passport-jwt` for authentication.
 Permission logic (i.e., abilities) are define in `src/auth/abilities.js`. Rules can be specified for authenticated and anonymous users, so potentially it's quite easy to give access anonymous users to leave comments in blog.
 The main logic is built on top of modules (`src/modules`)
 
-**Warning**: this code is not production ready and may have some bugs or use bad practises (e.g. it stores passwords with hashing)
+**Warning**: this code is just an example and doesn't follow best practices everywhere (e.g. it stores passwords without hashing).
 
 ## Installation
 
@@ -70,7 +70,7 @@ For example, to create new user you send:
 ```json
 {
   "user": {
-    ....
+    "....": "...."
   }
 }
 ```
@@ -80,7 +80,7 @@ to create a post you send
 ```json
 {
   "post": {
-    ....
+    "....": "...."
   }
 }
 ```
