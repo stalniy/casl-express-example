@@ -33,7 +33,7 @@ Also you need mongodb database up and running. Application will connect to `mong
 POST http://localhost:3030/users
 {
   "user": {
-    "email": "youremail@dot.com",
+    "email": "casl@medium.com",
     "password": "password"
   }
 }
@@ -45,7 +45,7 @@ POST http://localhost:3030/users
 POST http://localhost:3030/session
 {
   "session": {
-    "email": "youremail@dot.com",
+    "email": "casl@medium.com",
     "password": "password"
   }
 }
@@ -55,3 +55,32 @@ POST http://localhost:3030/session
 ```
 
 3. Put access token in `Authorization` header for all future requests
+
+
+## Routes
+
+* /posts
+* /posts/:id/comments
+* /users
+* /session
+
+To create or update an entity you need to send parameters in wrapper object, which key equals entity name.
+For example, to create new user you send:
+
+```json
+{
+  "user": {
+    ....
+  }
+}
+```
+
+to create a post you send
+
+```json
+{
+  "post": {
+    ....
+  }
+}
+```
