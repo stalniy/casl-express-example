@@ -21,3 +21,37 @@ cd casl-express-example
 npm install
 npm start # `npm run dev` to run in dev mode
 ```
+
+Also you need mongodb database up and running. Application will connect to `mongodb://localhost:27017/blog`
+
+
+## Instruction to login
+
+1. Create new user
+
+```
+POST http://localhost:3030/users
+{
+  "user": {
+    "email": "youremail@dot.com",
+    "password": "password"
+  }
+}
+```
+
+2. Create new session
+
+```
+POST http://localhost:3030/session
+{
+  "session": {
+    "email": "youremail@dot.com",
+    "password": "password"
+  }
+}
+
+201 Created
+{ "accessToken": "...." }
+```
+
+3. Put access token in `Authorization` header for all future requests
