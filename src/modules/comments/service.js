@@ -9,9 +9,12 @@ function findAll(req, res, next) {
 
 function create(req, res, next) {
   const comment = new Comment(Object.assign({}, req.body.comment, {
-    post: req.params.postId,
-    author: req.user._id
+    post: req.params.postId
   }))
+
+  if (req.user._id) {
+    comment.author = req.user._id
+  }
 
   req.ability.throwUnlessCan('create', comment)
   comment.save().catch(next).then(() => res.send({ comment }))
