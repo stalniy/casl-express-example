@@ -13,6 +13,7 @@ Application uses `passport-jwt` for authentication.
 Permission logic (i.e., abilities) are define in `src/auth/abilities.js`. Rules can be specified for authenticated and anonymous users, so potentially it's quite easy to give access anonymous users to leave comments in blog.
 The main logic is built on top of modules (`src/modules`)
 
+**Note**: refactored to use CASL 2.0. See [@casl/ability][casl-ability] and [@casl/mongoose][casl-mongoose] for details.
 **Warning**: this code is just an example and doesn't follow best practices everywhere (e.g. it stores passwords without hashing).
 
 ## Installation
@@ -88,3 +89,6 @@ to create a post you send
 ```
 
 [casl-express-example]: https://medium.com/@sergiy.stotskiy/authorization-with-casl-in-express-app-d94eb2e2b73b
+[casl-ability]: https://github.com/stalniy/casl/tree/master/packages/casl-ability
+[casl-mongoose]: https://github.com/stalniy/casl/tree/master/packages/casl-mongoose
+

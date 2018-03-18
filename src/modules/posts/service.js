@@ -1,6 +1,5 @@
 const { NotFound } = require('http-errors')
 const Post = require('./model')()
-const { toMongoQuery } = require('casl')
 
 function findAll(req, res, next) {
   Post.accessibleBy(req.ability)

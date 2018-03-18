@@ -1,4 +1,4 @@
-const { ForbiddenError } = require('casl')
+const { ForbiddenError } = require('@casl/ability')
 const { HttpError } = require('http-errors')
 
 function toJSON(err, options = {}) {

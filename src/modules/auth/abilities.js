@@ -1,4 +1,4 @@
-const { AbilityBuilder, Ability } = require('casl')
+const { AbilityBuilder, Ability } = require('@casl/ability')
 
 function defineAbilitiesFor(user) {
   const { rules, can } = AbilityBuilder.extract()
