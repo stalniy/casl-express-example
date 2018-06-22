@@ -7,7 +7,7 @@ function defineAbilitiesFor(user) {
   can('create', 'User')
 
   if (user) {
-    can('manage', ['Post', 'Comment'], { author: user._id })
+    can(['create', 'delete', 'update'], ['Post', 'Comment'], { author: user._id })
     can(['read', 'update'], 'User', { _id: user.id })
   }
 
