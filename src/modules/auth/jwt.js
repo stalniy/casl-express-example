@@ -2,8 +2,6 @@ const { Strategy } = require('passport-jwt');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
-let BLANK_JWT;
-
 function findUser(payload, done) {
   const User = mongoose.model('User');
 
@@ -17,30 +15,22 @@ function findUser(payload, done) {
     .catch((error) => done(error, false));
 }
 
-function generateBlankJwt(secret, options) {
-  return jwt.sign({ anonymous: true }, secret, {
-    expiresIn: '365d',
-    ...options
-  });
-}
+let ANONYMOUS_TOKEN;
 
 function configurePassport(passport, app) {
   const options = {
     issuer: app.get('jwt.issuer'),
     audience: app.get('jwt.audience')
   };
-  BLANK_JWT = BLANK_JWT || generateBlankJwt(app.get('jwt.secret'), {
-    issuer: app.get('jwt.issuer'),
-    audience: app.get('jwt.audience')
-  });
+
+  ANONYMOUS_TOKEN = ANONYMOUS_TOKEN || jwt.sign({ anonymous: true }, app.get('jwt.secret'), options);
   passport.use(new Strategy({
     ...options,
     secretOrKey: app.get('jwt.secret'),
-    jwtFromRequest: (req) => req.headers.authorization || BLANK_JWT,
+    jwtFromRequest: (req) => req.headers.authorization || ANONYMOUS_TOKEN,
   }, findUser));
 }
 
 module.exports = {
-  generateBlankJwt,
   configurePassport
 };

@@ -5,9 +5,9 @@
     "import/prefer-default-export": 0,
     "no-plusplus": 0,
     "comma-dangle": 0,
-    "no-underscore-dangle": ["error", { 
+    "no-underscore-dangle": ["error", {
       "allowAfterThis": true,
-      "allow": ["_id"] 
+      "allow": ["_id"]
     }],
     "no-param-reassign": ["error", { "props": false }],
     "no-mixed-operators": 0,
@@ -19,6 +19,7 @@
     "prefer-spread": 0,
     "object-curly-newline": ["error", {
       "ObjectPattern": "never"
-    }]
+    }],
+    "no-use-before-define": 0
   }
 }

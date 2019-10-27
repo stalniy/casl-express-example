@@ -9,7 +9,7 @@ async function find(req, res) {
   }
 
   req.ability.throwUnlessCan('read', user);
-  res.send({ user });
+  res.send({ item: user });
 }
 
 async function update(req, res) {
@@ -23,16 +23,16 @@ async function update(req, res) {
   req.ability.throwUnlessCan('update', user);
   await user.save();
 
-  res.send({ user });
+  res.send({ item: user });
 }
 
 async function create(req, res) {
-  const user = new User(req.body.user);
+  const user = new User(req.body);
 
   req.ability.throwUnlessCan('create', user);
   await user.save();
 
-  res.status(201).send({ user });
+  res.status(201).send({ item: user });
 }
 
 module.exports = {

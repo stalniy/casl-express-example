@@ -4,12 +4,12 @@ const Comment = require('./model')();
 async function findAll(req, res) {
   const comments = await Comment.accessibleBy(req.ability);
 
-  res.send({ comments });
+  res.send({ items: comments });
 }
 
 async function create(req, res) {
   const comment = new Comment({
-    ...req.body.comment,
+    ...req.body,
     post: req.params.postId
   });
 
@@ -20,7 +20,7 @@ async function create(req, res) {
   req.ability.throwUnlessCan('create', comment);
   await comment.save();
 
-  res.send({ comment });
+  res.send({ item: comment });
 }
 
 async function update(req, res) {
@@ -30,11 +30,11 @@ async function update(req, res) {
     throw new NotFound('Comment not found');
   }
 
-  comment.set(req.body.comment);
+  comment.set(req.body);
   req.ability.throwUnlessCan('update', comment);
   await comment.save();
 
-  res.send({ comment });
+  res.send({ item: comment });
 }
 
 async function destroy(req, res) {
@@ -45,7 +45,7 @@ async function destroy(req, res) {
     await comment.remove();
   }
 
-  res.send({ comment });
+  res.send({ item: comment });
 }
 
 module.exports = {

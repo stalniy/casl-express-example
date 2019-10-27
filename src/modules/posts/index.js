@@ -2,11 +2,11 @@ const posts = require('./service');
 
 module.exports = {
   configure(app) {
-    app.get('/posts', posts.findAll);
-    app.post('/posts', posts.create);
+    app.get('/articles', posts.findAll);
+    app.post('/articles', posts.create);
 
-    app.get('/posts/:id', posts.find);
-    app.patch('/posts/:id', posts.update);
-    app.delete('/posts/:id', posts.destroy);
+    app.get('/articles/:id', posts.find);
+    app.patch('/articles/:id', posts.update);
+    app.delete('/articles/:id', posts.destroy);
   }
 };

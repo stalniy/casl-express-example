@@ -21,7 +21,14 @@ module.exports = function errorHandler(error, req, res, next) { // eslint-disabl
     });
   }
 
-  let statusCode = error instanceof HttpError ? error.statusCode : 500;
+  let statusCode;
+
+  if (error.status) {
+    statusCode = error.status;
+  } else {
+    statusCode = error instanceof HttpError ? error.statusCode : 500;
+  }
+
 
   if (error.errors) {
     statusCode = 400;

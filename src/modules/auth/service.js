@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
-const { BadRequest, Unauthorized } = require('http-errors');
+const { BadRequest } = require('http-errors');
 const jwt = require('jsonwebtoken');
+const { defineRulesFor } = require('./abilities');
 
 async function create(req, res) {
-  const { email, password } = req.body.session || {};
+  const { email, password } = req.body || {};
 
   if (!email || !password) {
     throw new BadRequest('Please specify "email" and "password" fields is "session" object');
@@ -12,15 +13,20 @@ async function create(req, res) {
   const user = await mongoose.model('User').findOne({ email });
 
   if (!user || !user.isValidPassword(password)) {
-    throw new Unauthorized('Not authenticated');
+    throw new BadRequest('Invalid login or password');
   }
 
-  const accessToken = jwt.sign({ id: user.id }, req.app.get('jwt.secret'), {
+  // TODO: make async sign
+  const token = jwt.sign({ id: user.id }, req.app.get('jwt.secret'), {
     issuer: req.app.get('jwt.issuer'),
     audience: req.app.get('jwt.audience')
   });
 
-  res.send({ accessToken });
+  res.send({
+    token,
+    rules: defineRulesFor(user),
+    email: user.email,
+  });
 }
 
 module.exports = { create };

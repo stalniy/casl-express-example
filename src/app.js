@@ -2,6 +2,7 @@ const express = require('express');
 require('express-async-errors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const { accessibleRecordsPlugin } = require('@casl/mongoose');
 const errorHandler = require('./error-handler');
 
@@ -11,7 +12,15 @@ module.exports = function createApp() {
   const app = express();
 
   mongoose.plugin(accessibleRecordsPlugin);
+  mongoose.plugin((schema) => {
+    schema.methods.toJSON = function toJSON() {
+      const { _id, ...object } = this.toObject();
+      // have 2 ids in order to keep UI backward compatible with Rails API
+      return { _id, id: _id, ...object };
+    };
+  });
   app.use(bodyParser.json());
+  app.use(cors({ origin: true }));
 
   MODULES.forEach((moduleName) => {
     const appModule = require(`./modules/${moduleName}`); // eslint-disable-line

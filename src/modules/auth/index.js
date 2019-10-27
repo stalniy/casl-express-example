@@ -1,7 +1,7 @@
 const passport = require('passport');
 const { configurePassport } = require('./jwt');
 const session = require('./service');
-const createAbilities = require('./abilities');
+const { defineAbilityFor } = require('./abilities');
 
 module.exports = {
   configure(app) {
@@ -14,6 +14,10 @@ module.exports = {
     app.set('jwt.audience', 'casl.io');
     configurePassport(passport, app);
     app.use(passport.initialize());
-    app.use(passport.authenticate('jwt', { session: false }), createAbilities);
+    app.use(passport.authenticate('jwt', { session: false, failWithError: true }));
+    app.use((req, _, next) => {
+      req.ability = defineAbilityFor(req.user);
+      next();
+    });
   }
 };

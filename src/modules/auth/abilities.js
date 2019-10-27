@@ -1,22 +1,50 @@
 const { AbilityBuilder, Ability } = require('@casl/ability');
 
-function defineAbilitiesFor(user) {
-  const { rules, can } = AbilityBuilder.extract();
+let ANONYMOUS_ABILITY;
 
-  can('read', ['Post', 'Comment']);
-  can('create', 'User');
-
+function defineAbilityFor(user) {
   if (user) {
-    can(['create', 'delete', 'update'], ['Post', 'Comment'], { author: user._id });
-    can(['read', 'update'], 'User', { _id: user.id });
+    return new Ability(defineRulesFor(user));
   }
 
-  return new Ability(rules);
+  ANONYMOUS_ABILITY = ANONYMOUS_ABILITY || new Ability(defineRulesFor({}));
+  return ANONYMOUS_ABILITY;
 }
 
-const ANONYMOUS_ABILITY = defineAbilitiesFor(null);
+function defineRulesFor(user) {
+  const { rules, can } = AbilityBuilder.extract();
 
-module.exports = function createAbilities(req, res, next) {
-  req.ability = req.user.email ? defineAbilitiesFor(req.user) : ANONYMOUS_ABILITY;
-  next();
+  switch (user.role) {
+    case 'admin':
+      defineAdminRules(user, can);
+      break;
+    case 'writer':
+      defineWriterRules(user, can);
+      break;
+    default:
+      defineAnonymousRules(user, can);
+      break;
+  }
+
+  return rules;
+}
+
+function defineAdminRules(_, can) {
+  can('manage', 'all');
+}
+
+function defineWriterRules(user, can) {
+  defineAnonymousRules(user, can);
+
+  can(['create', 'delete', 'update'], ['Article', 'Comment'], { author: user._id });
+  can(['read', 'update'], 'User', { _id: user._id });
+}
+
+function defineAnonymousRules(_, can) {
+  can('read', ['Article', 'Comment']);
+}
+
+module.exports = {
+  defineRulesFor,
+  defineAbilityFor,
 };

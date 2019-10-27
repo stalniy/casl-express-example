@@ -1,56 +1,65 @@
 const { NotFound } = require('http-errors');
-const Post = require('./model')();
+const Article = require('./model')();
+const { parsePagination } = require('../utils');
 
 async function findAll(req, res) {
-  const posts = await Post.accessibleBy(req.ability);
-  res.send({ posts });
+  const articlesQuery = Article.accessibleBy(req.ability);
+  const [page, pageSize] = parsePagination(req.query);
+  const countQuery = Article.find().merge(articlesQuery);
+
+  const [items, count] = await Promise.all([
+    articlesQuery.limit(pageSize).skip((page - 1) * pageSize),
+    countQuery.count()
+  ]);
+
+  res.send({ items, count });
 }
 
 async function find(req, res) {
-  const post = await Post.findById(req.params.id);
+  const article = await Article.findById(req.params.id);
 
-  if (!post) {
-    throw new NotFound('Post not found');
+  if (!article) {
+    throw new NotFound('article not found');
   }
 
-  req.ability.throwUnlessCan('update', post);
-  res.send({ post });
+  req.ability.throwUnlessCan('read', article);
+  res.send({ item: article });
 }
 
 async function create(req, res) {
-  const post = new Post({
-    ...req.body.post,
+  const article = new Article({
+    ...req.body,
     author: req.user._id
   });
 
-  req.ability.throwUnlessCan('create', post);
-  await post.save();
-  res.send({ post });
+  req.ability.throwUnlessCan('create', article);
+  await article.save();
+  res.send({ item: article });
 }
 
 async function update(req, res) {
-  const post = await Post.findById(req.params.id);
+  const article = await Article.findById(req.params.id);
 
-  if (!post) {
-    throw new NotFound('Post not found');
+  if (!article) {
+    throw new NotFound('article not found');
   }
 
-  post.set(req.body.post);
-  req.ability.throwUnlessCan('update', post);
-  await post.save();
+  article.set(req.body);
+  req.ability.throwUnlessCan('update', article);
+  await article.save();
 
-  res.send({ post });
+  res.send({ item: article });
 }
 
 async function destroy(req, res) {
-  const post = await Post.findById(req.params.id);
+  const article = await Article.findById(req.params.id);
 
-  if (post) {
-    req.ability.throwUnlessCan('delete', post);
-    await post.remove();
+  if (article) {
+    req.ability.throwUnlessCan('delete', article);
+    await article.remove();
   }
 
-  res.send({ post });
+  res.send({ item: article });
 }
 
 module.exports = {
