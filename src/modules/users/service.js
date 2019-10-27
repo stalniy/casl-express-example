@@ -1,40 +1,42 @@
-const { NotFound } = require('http-errors')
-const User = require('./model')()
+const { NotFound } = require('http-errors');
+const User = require('./model')();
 
-function find(req, res, next) {
-  User.findById(req.params.id)
-    .then(user => {
-      if (!user) {
-        throw new NotFound('User is not found')
-      }
+async function find(req, res) {
+  const user = await User.findById(req.params.id);
 
-      req.ability.throwUnlessCan('read', user)
-      res.send({ user })
-    })
-    .catch(next)
+  if (!user) {
+    throw new NotFound('User is not found');
+  }
+
+  req.ability.throwUnlessCan('read', user);
+  res.send({ user });
 }
 
-function update(req, res, next) {
-  User.findOne({ _id: req.params.id })
-    .then(user => {
-      if (!user) {
-        throw new NotFound('Comment not found')
-      }
+async function update(req, res) {
+  const user = await User.findById(req.params.id);
 
-      user.set(req.body.user)
-      req.ability.throwUnlessCan('update', user)
+  if (!user) {
+    throw new NotFound('User is not found');
+  }
 
-      return user.save().then(() => user)
-    })
-    .then(user => res.send({ user }))
-    .catch(next)
+  user.set(req.body.user);
+  req.ability.throwUnlessCan('update', user);
+  await user.save();
+
+  res.send({ user });
 }
 
-function create(req, res, next) {
-  const user = new User(req.body.user)
+async function create(req, res) {
+  const user = new User(req.body.user);
 
-  req.ability.throwUnlessCan('create', user)
-  user.save().catch(next).then(() => res.send({ user }))
+  req.ability.throwUnlessCan('create', user);
+  await user.save();
+
+  res.status(201).send({ user });
 }
 
-module.exports = { create, find, update }
+module.exports = {
+  create,
+  find,
+  update
+};

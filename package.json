@@ -4,22 +4,28 @@
   "description": "Example of CASL and express integration",
   "main": "src/index.js",
   "dependencies": {
-    "@casl/ability": "^2.0.1",
-    "@casl/mongoose": "2.0.1",
+    "@casl/ability": "^3.0.1",
+    "@casl/mongoose": "^2.0.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "express-async-errors": "^3.1.1",
     "http-errors": "^1.6.1",
-    "jsonwebtoken": "^7.4.1",
-    "mongoose": "^4.11.4",
-    "passport": "^0.3.2",
-    "passport-jwt": "^2.2.1"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.0.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
     "nodemon": "^1.17.5"
   },
   "scripts": {
     "start": "node src",
-    "dev": "nodemon src"
+    "dev": "nodemon src",
+    "lint": "eslint --fix src/"
   },
   "author": "Sergii Stotskyi <sergiy.stotskiy@freaksidea.com>",
   "license": "MIT"

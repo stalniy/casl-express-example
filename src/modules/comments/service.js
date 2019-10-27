@@ -1,51 +1,56 @@
-const { NotFound } = require('http-errors')
-const Comment = require('./model')()
+const { NotFound } = require('http-errors');
+const Comment = require('./model')();
 
-function findAll(req, res, next) {
-  Comment.accessibleBy(req.ability)
-    .then(comments => res.send({ comments }))
-    .catch(next)
+async function findAll(req, res) {
+  const comments = await Comment.accessibleBy(req.ability);
+
+  res.send({ comments });
 }
 
-function create(req, res, next) {
-  const comment = new Comment(Object.assign({}, req.body.comment, {
+async function create(req, res) {
+  const comment = new Comment({
+    ...req.body.comment,
     post: req.params.postId
-  }))
+  });
 
   if (req.user._id) {
-    comment.author = req.user._id
+    comment.author = req.user._id;
   }
 
-  req.ability.throwUnlessCan('create', comment)
-  comment.save().catch(next).then(() => res.send({ comment }))
+  req.ability.throwUnlessCan('create', comment);
+  await comment.save();
+
+  res.send({ comment });
 }
 
-function update(req, res, next) {
-  Comment.findOne({ _id: req.params.id })
-    .then(comment => {
-      if (!comment) {
-        throw new NotFound('Comment not found')
-      }
+async function update(req, res) {
+  const comment = await Comment.findById(req.params.id);
 
-      comment.set(req.body.comment)
-      req.ability.throwUnlessCan('update', comment)
+  if (!comment) {
+    throw new NotFound('Comment not found');
+  }
 
-      return comment.save().then(() => comment)
-    })
-    .then(comment => res.send({ comment }))
-    .catch(next)
+  comment.set(req.body.comment);
+  req.ability.throwUnlessCan('update', comment);
+  await comment.save();
+
+  res.send({ comment });
 }
 
-function destroy(req, res, next) {
-  Comment.findOne({ _id: req.params.id })
-    .then(comment => {
-      if (comment) {
-        req.ability.throwUnlessCan('delete', comment)
-        return comment.remove().then(() => comment)
-      }
-    })
-    .then(comment => res.send({ comment }))
-    .catch(next)
+async function destroy(req, res) {
+  const comment = await Comment.findById(req.params.id);
+
+  if (comment) {
+    req.ability.throwUnlessCan('delete', comment);
+    await comment.remove();
+  }
+
+  res.send({ comment });
 }
 
-module.exports = { create, update, destroy, findAll }
+module.exports = {
+  create,
+  update,
+  destroy,
+  findAll
+};

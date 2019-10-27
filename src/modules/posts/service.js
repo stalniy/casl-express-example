@@ -1,63 +1,62 @@
-const { NotFound } = require('http-errors')
-const Post = require('./model')()
+const { NotFound } = require('http-errors');
+const Post = require('./model')();
 
-function findAll(req, res, next) {
-  Post.accessibleBy(req.ability)
-    .then(posts => {
-      res.send({ posts })
-    })
-    .catch(next)
+async function findAll(req, res) {
+  const posts = await Post.accessibleBy(req.ability);
+  res.send({ posts });
 }
 
-function find(req, res, next) {
-  Post.findById(req.params.id)
-    .then(post => {
-      if (!post) {
-        throw new NotFound('Post not found')
-      }
+async function find(req, res) {
+  const post = await Post.findById(req.params.id);
 
-      req.ability.throwUnlessCan('update', post)
-      res.send({ post })
-    })
-    .catch(next)
+  if (!post) {
+    throw new NotFound('Post not found');
+  }
+
+  req.ability.throwUnlessCan('update', post);
+  res.send({ post });
 }
 
-function create(req, res, next) {
-  const post = new Post(Object.assign({}, req.body.post, {
+async function create(req, res) {
+  const post = new Post({
+    ...req.body.post,
     author: req.user._id
-  }))
+  });
 
-
-  req.ability.throwUnlessCan('create', post)
-  post.save().catch(next).then(() => res.send({ post }))
+  req.ability.throwUnlessCan('create', post);
+  await post.save();
+  res.send({ post });
 }
 
-function update(req, res, next) {
-  Post.findById(req.params.id)
-    .then(post => {
-      if (!post) {
-        throw new NotFound('Post not found')
-      }
+async function update(req, res) {
+  const post = await Post.findById(req.params.id);
 
-      post.set(req.body.post)
-      req.ability.throwUnlessCan('update', post)
+  if (!post) {
+    throw new NotFound('Post not found');
+  }
 
-      return post.save().then(() => post)
-    })
-    .then(post => res.send({ post }))
-    .catch(next)
+  post.set(req.body.post);
+  req.ability.throwUnlessCan('update', post);
+  await post.save();
+
+  res.send({ post });
 }
 
-function destroy(req, res, next) {
-  Post.findOne({ _id: req.params.id })
-    .then(post => {
-      if (post) {
-        req.ability.throwUnlessCan('delete', post)
-        return post.remove().then(() => post)
-      }
-    })
-    .then(post => res.send({ post }))
-    .catch(next)
+async function destroy(req, res) {
+  const post = await Post.findById(req.params.id);
+
+  if (post) {
+    req.ability.throwUnlessCan('delete', post);
+    await post.remove();
+  }
+
+  res.send({ post });
 }
 
-module.exports = { create, update, destroy, find, findAll }
+module.exports = {
+  create,
+  update,
+  destroy,
+  find,
+  findAll
+};

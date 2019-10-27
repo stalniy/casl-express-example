@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
 
 module.exports = function () {
   const User = new Schema({
@@ -7,11 +8,11 @@ module.exports = function () {
     password: { type: String, required: true }
   }, {
     timestamps: true
-  })
+  });
 
   User.method('isValidPassword', function isValidPassword(password) {
-    return password === this.password
-  })
+    return password === this.password;
+  });
 
-  return mongoose.model('User', User)
+  return mongoose.model('User', User);
 };
