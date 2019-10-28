@@ -16,6 +16,8 @@ The main logic is built on top of modules (`src/modules`)
 **Note**: refactored to use CASL 2.0. See [@casl/ability][casl-ability] and [@casl/mongoose][casl-mongoose] for details.
 **Warning**: this code is just an example and doesn't follow best practices everywhere (e.g. it stores passwords without hashing).
 
+**Note #2**: in order to use with [Vuex example](https://github.com/stalniy/casl-vue-api-example) switch to branch [vue-api](https://github.com/stalniy/casl-express-example/tree/vue-api)
+
 ## Installation
 
 ```sh
