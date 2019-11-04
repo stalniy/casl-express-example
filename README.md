@@ -88,6 +88,11 @@ to create a post you send
 }
 ```
 
+There are 3 users available:
+* admin@casl.io / 123456
+* another.writer@casl.io / 123456
+* writer@casl.io / 123456
+
 [casl-express-example]: https://medium.com/@sergiy.stotskiy/authorization-with-casl-in-express-app-d94eb2e2b73b
 [casl-ability]: https://github.com/stalniy/casl/tree/master/packages/casl-ability
 [casl-mongoose]: https://github.com/stalniy/casl/tree/master/packages/casl-mongoose
