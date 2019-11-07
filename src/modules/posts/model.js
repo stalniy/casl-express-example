@@ -8,7 +8,14 @@ module.exports = function () {
     title: { type: String, required: true },
     body: { type: String, required: true },
   }, {
-    timestamps: true
+    timestamps: true,
+  });
+
+  Article.virtual('createdBy', {
+    ref: 'User',
+    localField: 'author',
+    foreignField: '_id',
+    justOne: true,
   });
 
   return mongoose.model('Article', Article);

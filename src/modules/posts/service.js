@@ -7,10 +7,18 @@ async function findAll(req, res) {
   const [page, pageSize] = parsePagination(req.query);
   const countQuery = Article.find().merge(articlesQuery);
 
-  const [items, count] = await Promise.all([
-    articlesQuery.limit(pageSize).skip((page - 1) * pageSize),
-    countQuery.count()
+  const [count, articles] = await Promise.all([
+    countQuery.count(),
+    articlesQuery
+      .populate('createdBy', 'email')
+      .limit(pageSize)
+      .skip((page - 1) * pageSize),
   ]);
+  const items = articles.map((article) => {
+    const object = article.toJSON();
+    object.createdBy = article.createdBy;
+    return object;
+  });
 
   res.send({ items, count });
 }
