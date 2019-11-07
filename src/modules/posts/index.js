@@ -1,12 +1,12 @@
 const posts = require('./service');
 
 module.exports = {
-  configure(app) {
-    app.get('/articles', posts.findAll);
-    app.post('/articles', posts.create);
+  configure(app, router) {
+    router.get('/articles', posts.findAll);
+    router.post('/articles', posts.create);
 
-    app.get('/articles/:id', posts.find);
-    app.patch('/articles/:id', posts.update);
-    app.delete('/articles/:id', posts.destroy);
+    router.get('/articles/:id', posts.find);
+    router.patch('/articles/:id', posts.update);
+    router.delete('/articles/:id', posts.destroy);
   }
 };

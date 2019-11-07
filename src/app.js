@@ -21,15 +21,17 @@ module.exports = function createApp() {
   });
   app.use(bodyParser.json());
   app.use(cors({ origin: true }));
+  const router = express.Router();
 
   MODULES.forEach((moduleName) => {
     const appModule = require(`./modules/${moduleName}`); // eslint-disable-line
 
     if (typeof appModule.configure === 'function') {
-      appModule.configure(app);
+      appModule.configure(app, router);
     }
   });
 
+  app.use('/api', router);
   app.use(errorHandler);
 
   mongoose.Promise = global.Promise;
