@@ -4,11 +4,12 @@ const { parsePagination } = require('../utils');
 
 async function findAll(req, res) {
   const articlesQuery = Article.accessibleBy(req.ability);
-  const [page, pageSize] = parsePagination(req.query);
-  const countQuery = Article.find().merge(articlesQuery);
 
+  const [page, pageSize] = parsePagination(req.query);
   const [count, articles] = await Promise.all([
-    countQuery.count(),
+    Article.find()
+      .merge(articlesQuery)
+      .count(),
     articlesQuery
       .populate('createdBy', 'email')
       .limit(pageSize)
@@ -35,13 +36,21 @@ async function find(req, res) {
 }
 
 async function create(req, res) {
+  const { published, ...body } = req.body;
   const article = new Article({
-    ...req.body,
+    ...body,
     author: req.user._id
   });
 
   req.ability.throwUnlessCan('create', article);
+
+  if (published) {
+    req.ability.throwUnlessCan('publish', article);
+    article.published = published;
+  }
+
   await article.save();
+
   res.send({ item: article });
 }
 
@@ -50,6 +59,10 @@ async function update(req, res) {
 
   if (!article) {
     throw new NotFound('article not found');
+  }
+
+  if (req.body.published) {
+    req.ability.throwUnlessCan('publish', article);
   }
 
   article.set(req.body);

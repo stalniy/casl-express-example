@@ -36,12 +36,13 @@ function defineAdminRules(_, can) {
 function defineWriterRules(user, can) {
   defineAnonymousRules(user, can);
 
-  can(['create', 'delete', 'update'], ['Article', 'Comment'], { author: user._id });
+  can(['read', 'create', 'delete', 'update'], ['Article', 'Comment'], { author: user._id });
+  can('publish', 'Article', { author: user._id, published: false })
   can(['read', 'update'], 'User', { _id: user._id });
 }
 
 function defineAnonymousRules(_, can) {
-  can('read', ['Article', 'Comment']);
+  can('read', ['Article', 'Comment'], { published: true });
 }
 
 module.exports = {
