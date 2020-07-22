@@ -1,5 +1,11 @@
 # Example of CASL integration in expressjs app
 
+## DEPRECATED
+
+The example has been moved to https://github.com/stalniy/casl-examples/tree/master/packages/express-blog
+
+----
+
 Read [CASL in Expressjs app][casl-express-example] for details.
 
 [CASL](https://stalniy.github.io/casl/) is an isomorphic authorization JavaScript library which restricts what resources a given user is allowed to access.
@@ -93,4 +99,3 @@ to create a post you send
 [casl-express-example]: https://medium.com/@sergiy.stotskiy/authorization-with-casl-in-express-app-d94eb2e2b73b
 [casl-ability]: https://github.com/stalniy/casl/tree/master/packages/casl-ability
 [casl-mongoose]: https://github.com/stalniy/casl/tree/master/packages/casl-mongoose
-
